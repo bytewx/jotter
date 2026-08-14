@@ -9,7 +9,7 @@
 #include <sys/file.h>
 #endif
 
-#include "notes_handler.h"
+#include "jotter.h"
 
 #define BUFFER_SIZE 1024
 #define DEFAULT_NOTES_FILE "notes.txt"
@@ -46,14 +46,14 @@ static void unlock_file(FILE* file) {
 #endif
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 const char* notes_file_path(void) {
     const char* path = getenv("NOTES_FILE");
 
     return path != NULL ? path : DEFAULT_NOTES_FILE;
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 void init_notes(NotesList* list) {
     list->count = 0;
     list->capacity = 2;
@@ -65,7 +65,7 @@ void init_notes(NotesList* list) {
     }
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 void write_to_file(const char* text, NotesList* list) {
     if (list->count == list->capacity) {
         list->capacity *= 2;
@@ -119,7 +119,7 @@ void write_to_file(const char* text, NotesList* list) {
     fclose(file);
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 void load_notes(NotesList* list) {
     FILE* file = fopen(notes_file_path(), "r");
 
@@ -174,14 +174,14 @@ void load_notes(NotesList* list) {
     fclose(file);
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 void print_notes(const NotesList* list) {
     for (int i = 0; i < list->count; i++) {
         printf("[%d] %s\n", i, list->notes[i]);
     }
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 void clean_notes(NotesList* list) {
     for (int i = 0; i < list->count; i++) {
         free(list->notes[i]);
@@ -210,7 +210,7 @@ void clean_notes(NotesList* list) {
     fclose(file);
 }
 
-/** @see notes_handler.h */
+/** @see jotter.h */
 void free_notes(NotesList* list) {
     for (int i = 0; i < list->count; i++) {
         free(list->notes[i]);

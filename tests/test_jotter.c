@@ -2,11 +2,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
-#include "../notes_handler.h"
+#include "../jotter.h"
 
 static const char* TEST_FILE = "test_notes.txt";
+
+/** Portable wrapper: MSVC lacks POSIX setenv/unsetenv. */
+static void test_setenv(const char* name, const char* value) {
+#ifdef _WIN32
+    _putenv_s(name, value);
+#else
+    setenv(name, value, 1);
+#endif
+}
+
+/** Portable wrapper: MSVC lacks POSIX setenv/unsetenv. */
+static void test_unsetenv(const char* name) {
+#ifdef _WIN32
+    _putenv_s(name, "");
+#else
+    unsetenv(name);
+#endif
+}
 
 static void remove_test_file(void) {
     remove(TEST_FILE);
@@ -107,17 +124,17 @@ static void test_load_notes_missing_file_is_noop(void) {
 }
 
 static void test_notes_file_path_defaults_and_honors_env(void) {
-    unsetenv("NOTES_FILE");
+    test_unsetenv("NOTES_FILE");
     assert(strcmp(notes_file_path(), "notes.txt") == 0);
 
-    setenv("NOTES_FILE", "/tmp/custom_notes.txt", 1);
+    test_setenv("NOTES_FILE", "/tmp/custom_notes.txt");
     assert(strcmp(notes_file_path(), "/tmp/custom_notes.txt") == 0);
 
-    unsetenv("NOTES_FILE");
+    test_unsetenv("NOTES_FILE");
 }
 
 int main(void) {
-    setenv("NOTES_FILE", TEST_FILE, 1);
+    test_setenv("NOTES_FILE", TEST_FILE);
 
     test_init_notes_starts_empty();
     test_write_and_load_round_trip();
@@ -125,7 +142,7 @@ int main(void) {
     test_clean_notes_empties_list_and_file();
     test_load_notes_missing_file_is_noop();
 
-    unsetenv("NOTES_FILE");
+    test_unsetenv("NOTES_FILE");
     test_notes_file_path_defaults_and_honors_env();
 
     printf("All tests passed.\n");

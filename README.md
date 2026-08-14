@@ -19,8 +19,8 @@ cmake -S . -B build
 cmake --build build
 ```
 
-This produces the `jotter` executable and the `test_notes_handler` test
-binary in `build/`.
+This produces the `jotter` executable and the `test_jotter` test binary
+in `build/`.
 
 ## Running
 

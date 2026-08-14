@@ -1,7 +1,7 @@
 /**
  * Jotter: a minimal interactive CLI for storing plain-text notes,
  * persisted to the file returned by notes_file_path() (see
- * notes_handler.h), which defaults to "notes.txt" in the current
+ * jotter.h), which defaults to "notes.txt" in the current
  * working directory and can be overridden via the NOTES_FILE
  * environment variable.
  */
@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "notes_handler.h"
+#include "jotter.h"
 
 #define BUFFER_SIZE 1024
 

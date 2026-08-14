@@ -8,12 +8,16 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-add_compile_options(-Wall -Wextra)
+if(MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra)
+endif()
 
-add_executable(jotter main.c notes_handler.c)
+add_executable(jotter main.c jotter.c)
 
 enable_testing()
 
-add_executable(test_notes_handler tests/test_notes_handler.c notes_handler.c)
-add_test(NAME notes_handler_tests COMMAND test_notes_handler
+add_executable(test_jotter tests/test_jotter.c jotter.c)
+add_test(NAME jotter_tests COMMAND test_jotter
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
